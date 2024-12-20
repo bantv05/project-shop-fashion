@@ -1,15 +1,19 @@
 package com.example.web_fashion.service.impl;
 
 import com.example.web_fashion.builder.ProductSearchBuilder;
+import com.example.web_fashion.converter.ProductDTOConverter;
 import com.example.web_fashion.converter.ProductSearchBuilderConverter;
-import com.example.web_fashion.dto.CategoryDTO;
-import com.example.web_fashion.dto.ProductDTO;
-import com.example.web_fashion.dto.StyleDTO;
-import com.example.web_fashion.model.Product;
+import com.example.web_fashion.model.dto.ProductDTO;
+import com.example.web_fashion.entity.Product;
 import com.example.web_fashion.repository.IProductRepository;
 import com.example.web_fashion.service.IProductService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,23 +28,50 @@ public class ProductService implements IProductService {
     private IProductRepository productRepository;
     @Autowired
     private ProductSearchBuilderConverter productSearchBuilderConverter;
+    @Autowired
+    private ProductDTOConverter productDTOConverter;
+
     @Override
-    public List<ProductDTO> findAll() {
-        List<Product> products = productRepository.findAll();
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        for (Product product : products) {
-            ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-            productDTOS.add(productDTO);
+    public Page<ProductDTO> getProductsSearch(Map<String, Object> params,
+                                              List<String> categories,
+                                              List<String> styles,
+                                              List<String> sizes,
+                                              Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        ProductSearchBuilder productSearchBuilder = productSearchBuilderConverter.toProductSearchBuilder(params, categories, styles, sizes);
+        Page<Product> products = productRepository.getSearchProducts(productSearchBuilder, pageable);
+        List<ProductDTO> productSearch = new ArrayList<>();
+        for (Product item : products) {
+            productSearch.add(productDTOConverter.convertProductToProductDTO(item));
         }
-        return productDTOS;
+        return new PageImpl<>(productSearch, pageable, products.getTotalElements());
     }
 
     @Override
-    public List<ProductDTO> getProductsSearch(Map<String, Object> params, List<String> categories, List<String> styles) {
-        ProductSearchBuilder productSearchBuilder = productSearchBuilderConverter.toProductSearchBuilder(params, categories, styles);
-//        List<Product> products = productRepository.findAll(productSearchBuilder);
-        return List.of();
+    public Product saveProduct(ProductDTO productDTO) {
+        Product product = productDTOConverter.convertProductDTOToProduct(productDTO);
+        return product;
     }
 
+    @Override
+    @Transactional
+    public Product updateProduct(ProductDTO productDTO) {
+        Product product = productDTOConverter.convertProductDTOToProductUpdate(productDTO);
+        return product;
+    }
 
+    @Override
+    public void deleteByIdIns(List<Long> productIds) {
+        for (Long it: productIds){
+            productRepository.queryDeleteById(it);
+        }
+    }
+
+    @Override
+    public ProductDTO getProduct(Long productId) {
+        Product product = productRepository.findById(productId).get();
+        ProductDTO productSearch;
+        productSearch = productDTOConverter.convertProductToProductDTO(product);
+        return productSearch;
+    }
 }

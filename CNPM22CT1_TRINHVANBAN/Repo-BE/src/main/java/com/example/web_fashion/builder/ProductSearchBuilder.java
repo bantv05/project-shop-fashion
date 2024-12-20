@@ -1,30 +1,34 @@
 package com.example.web_fashion.builder;
 
-import com.example.web_fashion.model.Category;
-import com.example.web_fashion.model.Status;
-import com.example.web_fashion.model.Style;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductSearchBuilder {
     private String nameProduct;
-    private Double priceDiscount;
+    private Double priceDiscountFrom;
+    private Double priceDiscountTo;
     private String color;
     private Boolean saleProduct = false;
     private Boolean newProduct = false;
     private Long idStatus;
+    private Long idProductOrder;
+    private List<String> sizes = new ArrayList<>();
     private List<String> style = new ArrayList<>();
     private List<String> categories = new ArrayList<>();
 
     public ProductSearchBuilder(Builder builder) {
         nameProduct = builder.nameProduct;
-        priceDiscount = builder.priceDiscount;
+        priceDiscountFrom = builder.priceDiscountFrom;
+        priceDiscountTo = builder.priceDiscountTo;
         color = builder.color;
         saleProduct = builder.saleProduct;
         newProduct = builder.newProduct;
         idStatus = builder.idStatus;
+        sizes = builder.sizes;
         style = builder.style;
+        idProductOrder = builder.idProductOrder;
         categories = builder.categories;
     }
 
@@ -52,21 +56,37 @@ public class ProductSearchBuilder {
         return color;
     }
 
-    public Double getPriceDiscount() {
-        return priceDiscount;
+    public Double getPriceDiscountTo() {
+        return priceDiscountTo;
+    }
+
+    public Double getPriceDiscountFrom() {
+        return priceDiscountFrom;
+    }
+
+    public List<String> getSizes() {
+        return sizes;
     }
 
     public String getNameProduct() {
         return nameProduct;
     }
-//đối tượng này sử dụng để set dữ liệu
+
+    public Long getIdProductOrder() {
+        return idProductOrder;
+    }
+
+    //đối tượng này sử dụng để set dữ liệu
     public static class Builder {
         private String nameProduct;
-        private Double priceDiscount;
+        private Double priceDiscountFrom;
+        private Double priceDiscountTo;
         private String color;
         private Boolean saleProduct = false;
         private Boolean newProduct = false;
         private Long idStatus;
+        private Long idProductOrder;
+        private List<String> sizes = new ArrayList<>();
         private List<String> style = new ArrayList<>();
         private List<String> categories = new ArrayList<>();
 
@@ -74,8 +94,12 @@ public class ProductSearchBuilder {
             this.nameProduct = nameProduct;
             return this;
         }
-        public Builder setPriceDiscount(Double priceDiscount) {
-            this.priceDiscount = priceDiscount;
+        public Builder setPriceDiscount(Double priceDiscountFrom) {
+            this.priceDiscountFrom = priceDiscountFrom;
+            return this;
+        }
+        public Builder setPriceDiscountTo(Double priceDiscountTo) {
+            this.priceDiscountTo = priceDiscountTo;
             return this;
         }
 
@@ -104,11 +128,27 @@ public class ProductSearchBuilder {
             return this;
         }
 
+        public Builder setPriceDiscountFrom(Double priceDiscountFrom) {
+            this.priceDiscountFrom = priceDiscountFrom;
+            return this;
+        }
+
+        public Builder setSizes(List<String> sizes) {
+            this.sizes = sizes;
+            return this;
+        }
+
         public Builder setCategories(List<String> categories) {
             this.categories = categories;
             return this;
         }
-        public ProductSearchBuilder build() {
+
+        public Builder setIdProductOrder(Long idProductOrder) {
+            this.idProductOrder = idProductOrder;
+            return this;
+        }
+
+    public ProductSearchBuilder build() {
             return new ProductSearchBuilder(this);
         }
     }

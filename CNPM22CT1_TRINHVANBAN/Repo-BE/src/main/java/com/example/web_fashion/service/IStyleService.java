@@ -1,6 +1,6 @@
 package com.example.web_fashion.service;
 
-import com.example.web_fashion.model.Style;
+import com.example.web_fashion.entity.Style;
 
 import java.util.List;
 

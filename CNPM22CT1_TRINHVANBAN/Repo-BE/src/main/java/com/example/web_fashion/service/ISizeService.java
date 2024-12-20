@@ -1,6 +1,6 @@
 package com.example.web_fashion.service;
 
-import com.example.web_fashion.model.Size;
+import com.example.web_fashion.entity.Size;
 
 import java.util.List;
 

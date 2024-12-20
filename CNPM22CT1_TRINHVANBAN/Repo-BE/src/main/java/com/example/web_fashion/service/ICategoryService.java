@@ -1,6 +1,6 @@
 package com.example.web_fashion.service;
 
-import com.example.web_fashion.model.Category;
+import com.example.web_fashion.entity.Category;
 
 import java.util.List;
 

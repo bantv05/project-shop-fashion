@@ -1,0 +1,5 @@
+.cutomsx input[type="checkbox"]:checked + label {
+    background-color: black;
+    color: white;
+    border-color: black;
+}
