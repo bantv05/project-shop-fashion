@@ -80,7 +80,6 @@ export const Sidebar = () => {
                                 </div>
                             </div>
                         </Link>
-
                     ))
                 }
             </div>

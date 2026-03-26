@@ -14,6 +14,4 @@ export const path =  {
     PRODUCT_NEW: 'product-new',
     PRODUCT_SALE: 'product-sale',
     CHECKOUT: 'checkout'
-
-
 }
